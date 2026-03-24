@@ -10,71 +10,41 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       id: "telegram",
       name: "Telegram",
       credentials: {
-        id: { label: "id", type: "text" },
-        first_name: { label: "First name", type: "text" },
-        last_name: { label: "Last name", type: "text" },
-        username: { label: "Username", type: "text" },
-        photo_url: { label: "Photo URL", type: "text" },
-        auth_date: { label: "auth_date", type: "text" },
-        hash: { label: "hash", type: "text" },
+        initData: { label: "initData", type: "text" },
       },
       async authorize(credentials) {
         if (!botToken) {
           return null;
         }
 
-        const id = credentials?.id;
-        const first_name = credentials?.first_name;
-        const auth_date = credentials?.auth_date;
-        const hash = credentials?.hash;
-
-        if (
-          typeof id !== "string" ||
-          typeof first_name !== "string" ||
-          typeof auth_date !== "string" ||
-          typeof hash !== "string"
-        ) {
+        const initData = credentials?.initData;
+        if (typeof initData !== "string" || initData.length === 0) {
           return null;
         }
 
-        const payload: Record<string, string | undefined> = {
-          id,
-          first_name,
-          auth_date,
-          hash,
-        };
-
-        const last_name = credentials.last_name;
-        const username = credentials.username;
-        const photo_url = credentials.photo_url;
-
-        if (typeof last_name === "string" && last_name.length > 0) {
-          payload.last_name = last_name;
-        }
-        if (typeof username === "string" && username.length > 0) {
-          payload.username = username;
-        }
-        if (typeof photo_url === "string" && photo_url.length > 0) {
-          payload.photo_url = photo_url;
-        }
-
-        const { verifyTelegramLogin } = await import("@/lib/telegram-auth");
-        if (!verifyTelegramLogin(payload, botToken)) {
+        const { verifyTelegramWebAppInitData } =
+          await import("@/lib/telegram-auth");
+        const result = verifyTelegramWebAppInitData(initData, botToken);
+        if (!result.ok) {
           return null;
         }
 
-        const displayName = [first_name, last_name].filter(Boolean).join(" ");
+        const { user } = result;
+        const id = String(user.id);
+        const displayName = [user.first_name, user.last_name]
+          .filter(Boolean)
+          .join(" ");
 
         return {
           id,
-          name: displayName || first_name,
+          name: displayName || user.first_name,
           image:
-            typeof photo_url === "string" && photo_url.length > 0
-              ? photo_url
+            typeof user.photo_url === "string" && user.photo_url.length > 0
+              ? user.photo_url
               : undefined,
           telegramUsername:
-            typeof username === "string" && username.length > 0
-              ? username
+            typeof user.username === "string" && user.username.length > 0
+              ? user.username
               : null,
         };
       },

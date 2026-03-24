@@ -1,5 +1,5 @@
 import { PageShell } from "@/components/page-shell";
-import { TelegramLoginButton } from "@/components/telegram-login-button";
+import { TelegramWebAppSignIn } from "@/components/telegram-webapp-signin";
 
 export const metadata = {
   title: "Sign in",
@@ -25,12 +25,12 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
                 Sign in
               </h1>
               <p className="text-sm text-muted-foreground">
-                Access your parcel account using Telegram
+                Access your parcel account via the Telegram Mini App
               </p>
             </div>
 
             <div className="rounded-xl border border-border/80 bg-background p-4">
-              <TelegramLoginButton callbackUrl={callbackUrl} />
+              <TelegramWebAppSignIn callbackUrl={callbackUrl} />
             </div>
 
             <p className="text-center text-xs text-muted-foreground">
