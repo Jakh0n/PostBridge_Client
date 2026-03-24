@@ -14,7 +14,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useParcel } from "@/hooks/useParcel";
 import { getApiErrorMessage } from "@/services/api";
-import { formatKrw, formatParcelType } from "@/utils/format";
+import { formatKrw, formatParcelRole, formatParcelType } from "@/utils/format";
 
 interface ParcelDetailProps {
   id: string;
@@ -76,6 +76,7 @@ export function ParcelDetail({ id }: ParcelDetailProps) {
       </div>
 
       <div className="flex flex-wrap gap-2">
+        <Badge>{formatParcelRole(data.role)}</Badge>
         <Badge>{formatParcelType(data.parcelType)}</Badge>
       </div>
 
@@ -91,6 +92,33 @@ export function ParcelDetail({ id }: ParcelDetailProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-4 grid gap-2 rounded-lg border border-border/70 bg-muted/20 p-3 text-sm sm:grid-cols-2">
+            {data.role === "sender" ? (
+              <>
+                <p>
+                  <span className="text-muted-foreground">Weight:</span>{" "}
+                  {data.weightKg ?? "-"} kg
+                </p>
+                <p>
+                  <span className="text-muted-foreground">Delivery date:</span>{" "}
+                  {data.date || "-"}
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  <span className="text-muted-foreground">Available date:</span>{" "}
+                  {data.availableDate || "-"}
+                </p>
+                <p>
+                  <span className="text-muted-foreground">Vehicle:</span>{" "}
+                  {data.vehicleType
+                    ? formatParcelType(data.vehicleType)
+                    : "-"}
+                </p>
+              </>
+            )}
+          </div>
           <p className="whitespace-pre-wrap text-muted-foreground">
             {data.description?.trim() || "No additional description."}
           </p>
@@ -99,7 +127,9 @@ export function ParcelDetail({ id }: ParcelDetailProps) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Contact sender</CardTitle>
+          <CardTitle>
+            Contact {data.role === "sender" ? "sender" : "courier"}
+          </CardTitle>
           <CardDescription>
             Reach out on Telegram or phone to coordinate pickup and delivery.
           </CardDescription>

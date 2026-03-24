@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { verifyTelegramLogin } from "@/lib/telegram-auth";
 
 const botToken = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -59,6 +58,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           payload.photo_url = photo_url;
         }
 
+        const { verifyTelegramLogin } = await import("@/lib/telegram-auth");
         if (!verifyTelegramLogin(payload, botToken)) {
           return null;
         }

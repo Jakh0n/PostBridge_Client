@@ -3,11 +3,18 @@ export interface ParcelContact {
   telegram?: string;
 }
 
+export type ParcelRole = "sender" | "courier";
+
 export interface Parcel {
   id: string;
+  role: ParcelRole;
   from: string;
   to: string;
   parcelType: string;
+  weightKg?: number;
+  date?: string;
+  availableDate?: string;
+  vehicleType?: string;
   price: number;
   contact: ParcelContact;
   description?: string;
@@ -15,9 +22,14 @@ export interface Parcel {
 }
 
 export interface CreateParcelInput {
+  role: ParcelRole;
   from: string;
   to: string;
   parcelType: string;
+  weightKg?: number;
+  date?: string;
+  availableDate?: string;
+  vehicleType?: string;
   price: number;
   contact: ParcelContact;
   description?: string;

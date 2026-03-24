@@ -5,7 +5,7 @@ export default function CreateParcelPage() {
   return (
     <PageShell
       title="Post a parcel"
-      description="Share your route, price, and how deliverers should contact you."
+      description="Choose your role first, then post either a sender request or courier offer."
     >
       <ParcelForm />
     </PageShell>

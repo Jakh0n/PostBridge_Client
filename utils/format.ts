@@ -13,3 +13,7 @@ export function formatParcelType(value: string): string {
     .replace(/_/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
+
+export function formatParcelRole(role: "sender" | "courier"): string {
+  return role === "sender" ? "Sender request" : "Courier offer";
+}

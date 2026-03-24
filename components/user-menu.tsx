@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { LogIn, LogOut, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,6 +17,7 @@ import {
 
 export function UserMenu() {
   const { data: session, status } = useSession();
+  const pathname = usePathname();
 
   if (status === "loading") {
     return (
@@ -27,6 +29,10 @@ export function UserMenu() {
   }
 
   if (!session?.user) {
+    if (pathname === "/auth/signin") {
+      return null;
+    }
+
     return (
       <Button variant="outline" size="sm" asChild>
         <Link href="/auth/signin">

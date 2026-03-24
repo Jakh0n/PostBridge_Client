@@ -26,7 +26,8 @@ export default auth((req) => {
 
 export const config = {
   matcher: [
-    // Protect app routes, but skip Next internals, static assets, and auth API.
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
+    // Skip all /api/* (Auth.js lives under /api/auth/*). If proxy runs on those routes,
+    // session fetch gets an HTML redirect instead of JSON → ClientFetchError.
+    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
   ],
 };
